@@ -25,6 +25,8 @@
         <br />
         <h3>Appeared elements</h3>
         <pre><code id="appeared"></code></pre>
+        <h3>Disappeared elements</h3>
+        <pre><code id="disappeared"></code></pre>
 
         <h3 id="force" style="cursor: pointer">Click me to force appear check</h3>
 
@@ -34,18 +36,32 @@
 
 <p>Scroll or resize this page</p>
 
-<pre><code>var $appeared = $('#appeared');
-$('section h3').appear(function($elements) {
-  $elements.yellowFade();
+<pre><code>$(function() {
+  var $appeared = $('#appeared');
+  var $disappeared = $('#disappeared');
 
-  $appeared.empty();
-  $elements.each(function() {
-    $appeared.append(this.innerHTML+"\n");
-  })
-});
+  $('section h3').appear();
+  $('#force').on('click', function() {
+    $.force_appear();
+  });
 
-$('#force').on('click', function() {
-  $.force_appear();
+  $(document.body).on('appear', 'section h3', function(e, $affected) {
+    // this code is executed for each appeared element
+    $(this).yellowFade();
+
+    $appeared.empty();
+    $affected.each(function() {
+      $appeared.append(this.innerHTML+"\n");
+    })
+  });
+
+  $(document.body).on('disappear', 'section h3', function(e, $affected) {
+    // this code is executed for each disappeared element
+    $disappeared.empty();
+    $affected.each(function() {
+      $disappeared.append(this.innerHTML+"\n");
+    })
+  });
 });
 </code></pre>
 
