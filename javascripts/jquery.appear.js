@@ -11,20 +11,22 @@
 
   var $priorAppeared = [];
 
-  function appeared(selector) {
-    return $(selector).filter(function () {
-      var $this = $(this);
-      console.log($this.data('_appear_triggered'))
-      return !$this.data('_appear_triggered') && $this.is(':appeared');
-    });
+  function isAppeared() {
+    return $(this).is(':appeared');
+  }
+
+  function isNotTriggered() {
+    return !$(this).data('_appear_triggered');
   }
 
   function process() {
     checkLock = false;
+
     for (var index = 0, selectorsLength = selectors.length; index < selectorsLength; index++) {
-      var $appeared = appeared(selectors[index]);
+      var $appeared = selectors[index].filter(isAppeared);
 
       $appeared
+        .filter(isNotTriggered)
         .data('_appear_triggered', true)
         .trigger('appear', [$appeared]);
 
